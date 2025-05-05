@@ -1,65 +1,65 @@
 'use client'
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
 
 export default function Home() {
-  const [idKupon, setIdKupon] = useState('')
-  const [data, setData] = useState<any>(null)
-  const [error, setError] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [kuponData, setKuponData] = useState<any[]>([])
+  const [error, setError] = useState<string>('')
 
-  const handleCek = async () => {
-    const res = await fetch('/api/cek-kupon', {
-      method: 'POST',
-      body: JSON.stringify({ id_kupon: idKupon })
-    })
-    if (!res.ok) {
-      setError('Kupon tidak ditemukan')
-      setData(null)
-      return
+  // Mengambil data kupon saat halaman dimuat
+  useEffect(() => {
+    const fetchKuponData = async () => {
+      try {
+        const response = await fetch('/api/kupon')
+        if (!response.ok) {
+          throw new Error('Gagal memuat data kupon')
+        }
+        const data = await response.json()
+        
+        // Menyaring data kupon yang kehadirannya false
+        const filteredData = data.filter((kupon: any) => kupon.kehadiran !== false)
+        
+        setKuponData(filteredData)
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message)  // Mengakses properti message dari objek Error
+        } else {
+          setError('Terjadi kesalahan yang tidak diketahui')
+        }
+      }
     }
-    const json = await res.json()
-    setData(json)
-    setError('')
-  }
 
-  const handleSubmit = async () => {
-    await fetch('/api/submit-kehadiran', {
-      method: 'POST',
-      body: JSON.stringify({ id_kupon: idKupon })
-    })
-    setSubmitted(true)
-  }
+    fetchKuponData()
+  }, [])
 
   return (
-    <main className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">Registrasi Kehadiran Kupon</h1>
-      <input
-        type="text"
-        value={idKupon}
-        onChange={(e) => setIdKupon(e.target.value)}
-        placeholder="Masukkan ID Kupon"
-        className="border px-3 py-2 w-full mb-2"
-      />
-      <button onClick={handleCek} className="bg-blue-500 text-white px-4 py-2 mb-4">
-        Cek Kupon
-      </button>
-
+    <main className="p-4 max-w-6xl mx-auto">
+      <h1 className="text-xl font-bold mb-4">Daftar Kupon yang Terdaftar</h1>
       {error && <p className="text-red-500">{error}</p>}
 
-      {data && (
-        <div className="border p-4 mb-4">
-          <p><strong>Nama:</strong> {data.nama}</p>
-          <p><strong>Jabatan:</strong> {data.jabatan}</p>
-          <p><strong>Unit Kerja:</strong> {data.unit_kerja}</p>
-          <p><strong>Kehadiran:</strong> {data.kehadiran ? 'Hadir' : 'Belum Hadir'}</p>
-
-          {!data.kehadiran && !submitted && (
-            <button onClick={handleSubmit} className="bg-green-500 text-white px-4 py-2 mt-2">
-              Submit Kehadiran
-            </button>
-          )}
-          {submitted && <p className="text-green-600 mt-2">Kehadiran telah dicatat!</p>}
-        </div>
+      {kuponData.length === 0 ? (
+        <p className="text-gray-500">Belum ada kupon yang terdaftar.</p>
+      ) : (
+        <table className="min-w-full table-auto border-collapse border border-gray-200">
+          <thead>
+            <tr>
+              <th className="border-b px-4 py-2 text-left">ID Kupon</th>
+              <th className="border-b px-4 py-2 text-left">Nama</th>
+              <th className="border-b px-4 py-2 text-left">Jabatan</th>
+              <th className="border-b px-4 py-2 text-left">Unit Kerja</th>
+            </tr>
+          </thead>
+          <tbody>
+            {kuponData.map((kupon) => (
+              <tr key={kupon.id}>
+                <td className="border-b px-4 py-2">{kupon.id_kupon}</td>
+                <td className="border-b px-4 py-2">{kupon.nama}</td>
+                <td className="border-b px-4 py-2">{kupon.jabatan}</td>
+                <td className="border-b px-4 py-2">{kupon.unit_kerja}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </main>
   )
