@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Kupon {
+  id_kupon    String @id
+  nama        String
+  jabatan     String
+  unit_kerja  String
+  kehadiran   Boolean @default(false)
+  hadiah      Hadiah?
+}
+
+model Hadiah {
+  id         Int    @id @default(autoincrement())
+  id_kupon   String @unique
+  nama       String
+  hadiah     String
+  kupon      Kupon  @relation(fields: [id_kupon], references: [id_kupon])
+}
