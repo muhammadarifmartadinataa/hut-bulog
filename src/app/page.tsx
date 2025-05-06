@@ -6,23 +6,18 @@ export default function Home() {
   const [kuponData, setKuponData] = useState<any[]>([])
   const [error, setError] = useState<string>('')
 
-  // Mengambil data kupon saat halaman dimuat
   useEffect(() => {
     const fetchKuponData = async () => {
       try {
-        const response = await fetch('/api/kupon')
+        const response = await fetch('/api/kupon') // API untuk semua kupon
         if (!response.ok) {
           throw new Error('Gagal memuat data kupon')
         }
         const data = await response.json()
-        
-        // Menyaring data kupon yang kehadirannya false
-        const filteredData = data.filter((kupon: any) => kupon.kehadiran !== false)
-        
-        setKuponData(filteredData)
+        setKuponData(data)
       } catch (error: unknown) {
         if (error instanceof Error) {
-          setError(error.message)  // Mengakses properti message dari objek Error
+          setError(error.message)
         } else {
           setError('Terjadi kesalahan yang tidak diketahui')
         }
@@ -47,6 +42,7 @@ export default function Home() {
               <th className="border-b px-4 py-2 text-left">Nama</th>
               <th className="border-b px-4 py-2 text-left">Jabatan</th>
               <th className="border-b px-4 py-2 text-left">Unit Kerja</th>
+              <th className="border-b px-4 py-2 text-left">Hadiah</th> {/* Menambahkan kolom Hadiah */}
             </tr>
           </thead>
           <tbody>
@@ -56,6 +52,7 @@ export default function Home() {
                 <td className="border-b px-4 py-2">{kupon.nama}</td>
                 <td className="border-b px-4 py-2">{kupon.jabatan}</td>
                 <td className="border-b px-4 py-2">{kupon.unit_kerja}</td>
+                <td className="border-b px-4 py-2">{kupon.hadiah ? kupon.hadiah.hadiah : '-'}</td> {/* Menampilkan hadiah */}
               </tr>
             ))}
           </tbody>
