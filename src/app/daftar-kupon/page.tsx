@@ -101,8 +101,8 @@ export default function DaftarKupon() {
             style={inputStyle}
           >
             <option value="" disabled>Pilih Unit Kerja</option>
-            <option value="PT Kopel">PT Kopel</option>
-            <option value="KT Korp">KT Korp</option>
+            <option value="PT KOPEL">PT Kopel</option>
+            <option value="PT Korp">PT Korp</option>
             <option value="Kanwil Lampung">Kanwil Lampung</option>
             <option value="UB Jastasma">UB Jastasma</option>
             <option value="JPL Lampung">JPL Lampung</option>

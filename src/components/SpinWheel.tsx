@@ -82,8 +82,8 @@ export default function SpinWheel() {
     prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
 
   return (
-    <div className="flex items-start justify-center  bg-black text-white px-4 py-10">
-      <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
+    <div className="flex items-start justify-center  bg-black text-white px-4 py-30">
+    <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
         {/* Kolom 1: Roda Spin */}
         <div className="flex-1 flex justify-center items-center">
           {data.length === 0 ? (
