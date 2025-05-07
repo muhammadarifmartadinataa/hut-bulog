@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Wheel } from "react-custom-roulette";
-import useSound from "use-sound";
 
 interface Kupon {
   id_kupon: string;
@@ -18,11 +17,6 @@ export default function SpinWheel() {
   const [hadiah, setHadiah] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
-  // Inisialisasi efek suara
-  const [playSpinSound] = useSound("/sounds/spin.mp3", { volume: 0.5 });
-  const [playWinSound] = useSound("/sounds/win.mp3", { volume: 0.5 });
-
-  // Fetch data kupon hadir
   const fetchData = async () => {
     try {
       const res = await fetch("/api/kupon-hadiah");
@@ -57,7 +51,6 @@ export default function SpinWheel() {
     setPrizeNumber(random);
     setMustSpin(true);
     setIsSaved(false);
-    playSpinSound(); // Mainkan suara saat mulai spin
   };
 
   const handleWinnerSave = async () => {
@@ -109,7 +102,6 @@ export default function SpinWheel() {
               radiusLineWidth={2}
               onStopSpinning={() => {
                 setMustSpin(false);
-                playWinSound(); // Mainkan suara saat spin berhenti
               }}
             />
           )}
