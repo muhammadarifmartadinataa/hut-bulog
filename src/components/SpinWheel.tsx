@@ -82,28 +82,30 @@ export default function SpinWheel() {
     prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
 
   return (
-    <div className="flex items-start justify-center min-h-screen bg-black text-white px-4 py-8">
+    <div className="flex items-start justify-center  bg-black text-white px-4 py-10">
       <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
         {/* Kolom 1: Roda Spin */}
         <div className="flex-1 flex justify-center items-center">
           {data.length === 0 ? (
             <p className="text-gray-400">Belum ada kupon hadir untuk diundi.</p>
           ) : (
-            <Wheel
-              mustStartSpinning={mustSpin}
-              prizeNumber={prizeNumber ?? 0}
-              data={data}
-              backgroundColors={["#001F3F", "#7FDBFF"]}
-              textColors={["#ffffff"]}
-              fontSize={20}
-              outerBorderColor="#ccc"
-              outerBorderWidth={4}
-              radiusLineColor="#eaeaea"
-              radiusLineWidth={2}
-              onStopSpinning={() => {
-                setMustSpin(false);
-              }}
-            />
+            <div style={{ width: 500, height: 500 }}>
+              <Wheel
+                mustStartSpinning={mustSpin}
+                prizeNumber={prizeNumber ?? 0}
+                data={data}
+                backgroundColors={["#001F3F", "#7FDBFF"]}
+                textColors={["#ffffff"]}
+                fontSize={15} // Ukuran teks kecil agar muat banyak
+                outerBorderColor="#ccc"
+                outerBorderWidth={4}
+                radiusLineColor="#eaeaea"
+                radiusLineWidth={2}
+                onStopSpinning={() => {
+                  setMustSpin(false);
+                }}
+              />
+            </div>
           )}
         </div>
 
