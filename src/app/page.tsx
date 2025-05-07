@@ -82,16 +82,16 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              {currentPageData.map((kupon) => (
-                <tr key={kupon.id}>
-                  <td className="border-b px-4 py-2">{kupon.id_kupon}</td>
-                  <td className="border-b px-4 py-2">{kupon.nama}</td>
-                  <td className="border-b px-4 py-2">{kupon.jabatan}</td>
-                  <td className="border-b px-4 py-2">{kupon.unit_kerja}</td>
-                  <td className="border-b px-4 py-2">{kupon.hadiah ? kupon.hadiah.hadiah : "-"}</td>
-                </tr>
-              ))}
-            </tbody>
+  {currentPageData.map((kupon, index) => (
+    <tr key={kupon.id_kupon || index}> {/* Fallback to index if id_kupon is not unique */}
+      <td className="border-b px-4 py-2">{kupon.id_kupon}</td>
+      <td className="border-b px-4 py-2">{kupon.nama}</td>
+      <td className="border-b px-4 py-2">{kupon.jabatan}</td>
+      <td className="border-b px-4 py-2">{kupon.unit_kerja}</td>
+      <td className="border-b px-4 py-2">{kupon.hadiah ? kupon.hadiah.hadiah : "-"}</td>
+    </tr>
+  ))}
+</tbody>
           </table>
 
           <div className="mt-4 flex justify-center items-center space-x-2">

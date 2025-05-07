@@ -95,7 +95,7 @@ export default function SpinWheel() {
               data={data}
               backgroundColors={["#001F3F", "#7FDBFF"]}
               textColors={["#ffffff"]}
-              fontSize={12}
+              fontSize={20}
               outerBorderColor="#ccc"
               outerBorderWidth={4}
               radiusLineColor="#eaeaea"
