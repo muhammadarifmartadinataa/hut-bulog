@@ -1,40 +1,71 @@
-// src/app/kehadiran/page.tsx
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 
 export default function Kehadiran() {
-  const [idKupon, setIdKupon] = useState('')
-  const [data, setData] = useState<any>(null)
-  const [error, setError] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [idKupon, setIdKupon] = useState('');
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (idKupon.trim().length >= 3) {
+        handleCek();
+      } else {
+        setData(null);
+        setError('');
+      }
+    }, 500); // Delay 500ms setelah user berhenti mengetik
+
+    return () => clearTimeout(timer); // Batalkan jika user masih mengetik
+  }, [idKupon]);
 
   const handleCek = async () => {
-    const res = await fetch('/api/cek-kupon', {
-      method: 'POST',
-      body: JSON.stringify({ id_kupon: idKupon })
-    })
-    if (!res.ok) {
-      setError('Kupon tidak ditemukan')
-      setData(null)
-      return
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/cek-kupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_kupon: idKupon }),
+      });
+
+      if (!res.ok) {
+        setError('Kupon tidak ditemukan');
+        setData(null);
+      } else {
+        const json = await res.json();
+        setData(json);
+        setError('');
+        setSubmitted(false);
+      }
+    } catch (err) {
+      setError('Terjadi kesalahan');
+    } finally {
+      setIsLoading(false);
     }
-    const json = await res.json()
-    setData(json)
-    setError('')
-  }
+  };
 
   const handleSubmit = async () => {
     await fetch('/api/submit-kehadiran', {
       method: 'POST',
-      body: JSON.stringify({ id_kupon: idKupon })
-    })
-    setSubmitted(true)
-  }
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id_kupon: idKupon }),
+    });
+
+    setSubmitted(true);
+    handleCek(); // refresh data
+  };
 
   return (
     <main className="p-4 max-w-md mx-auto">
       <h1 className="text-xl font-bold mb-4">Registrasi Kehadiran Kupon</h1>
+
       <input
         type="text"
         value={idKupon}
@@ -42,10 +73,8 @@ export default function Kehadiran() {
         placeholder="Masukkan ID Kupon"
         className="border px-3 py-2 w-full mb-2"
       />
-      <button onClick={handleCek} className="bg-blue-500 text-white px-4 py-2 mb-4">
-        Cek Kupon
-      </button>
 
+      {isLoading && <p className="text-gray-500 mb-2">Memuat data kupon...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       {data && (
@@ -56,13 +85,19 @@ export default function Kehadiran() {
           <p><strong>Kehadiran:</strong> {data.kehadiran ? 'Hadir' : 'Belum Hadir'}</p>
 
           {!data.kehadiran && !submitted && (
-            <button onClick={handleSubmit} className="bg-green-500 text-white px-4 py-2 mt-2">
+            <button
+              onClick={handleSubmit}
+              className="bg-green-500 text-white px-4 py-2 mt-2"
+            >
               Submit Kehadiran
             </button>
           )}
-          {submitted && <p className="text-green-600 mt-2">Kehadiran telah dicatat!</p>}
+
+          {submitted && (
+            <p className="text-green-600 mt-2">Kehadiran telah dicatat!</p>
+          )}
         </div>
       )}
     </main>
-  )
+  );
 }
