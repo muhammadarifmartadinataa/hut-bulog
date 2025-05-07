@@ -13,16 +13,18 @@ interface Kupon {
 export default function SpinWheel() {
   const [kuponHadir, setKuponHadir] = useState<Kupon[]>([])
   const [mustSpin, setMustSpin] = useState(false)
-  const [prizeNumber, setPrizeNumber] = useState(0)
-  const [hadiah, setHadiah] = useState('') // State untuk nama hadiah yang dipilih
+  const [prizeNumber, setPrizeNumber] = useState<number | null>(null)
+  const [hadiah, setHadiah] = useState('')
+  const [isSaved, setIsSaved] = useState(false)
+
+  // Fetch data kupon hadir
+  const fetchData = async () => {
+    const res = await fetch('/api/kupon-hadiah')
+    const data = await res.json()
+    setKuponHadir(data)
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('/api/kupon-hadiah') // API untuk kupon yang belum mendapat hadiah
-      const data = await res.json()
-      setKuponHadir(data)
-    }
-
     fetchData()
   }, [])
 
@@ -35,20 +37,22 @@ export default function SpinWheel() {
   }))
 
   const handleSpin = () => {
-    const random = Math.floor(Math.random() * data.length)
-    setPrizeNumber(random)
-    setMustSpin(true)
-  }
-
-  const handleWinnerSave = async () => {
-    const winner = data[prizeNumber]
-
     if (!hadiah) {
       alert('Harap pilih hadiah terlebih dahulu!')
       return
     }
 
-    // Kirim data pemenang ke API hadiah untuk disimpan
+    const random = Math.floor(Math.random() * data.length)
+    setPrizeNumber(random)
+    setMustSpin(true)
+    setIsSaved(false)
+  }
+
+  const handleWinnerSave = async () => {
+    if (prizeNumber === null) return
+
+    const winner = data[prizeNumber]
+
     await fetch('/api/hadiah', {
       method: 'POST',
       headers: {
@@ -58,32 +62,55 @@ export default function SpinWheel() {
         id_kupon: winner.id_kupon,
         nama: winner.nama,
         jabatan: winner.jabatan,
-        hadiah: hadiah, // Mengirim hadiah yang dipilih
+        hadiah: hadiah,
       }),
     })
 
-    // Mengupdate kupon yang menang
-    const updatedKuponHadir = kuponHadir.filter(
-      (kupon) => kupon.id_kupon !== winner.id_kupon
-    )
-    setKuponHadir(updatedKuponHadir)
+    await fetchData()
     setMustSpin(false)
+    setHadiah('')
+    setIsSaved(true)
+    setPrizeNumber(null)
   }
 
-  const winner = data[prizeNumber]
+  const winner =
+    prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null
 
   return (
-    <div className="flex items-center justify-center min-h-screen"> {/* Flex container untuk menempatkan di tengah */}
+    <div className="flex items-center justify-center min-h-screen bg-black text-white px-4">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Undian Hadiah</h2>
 
+        {/* Dropdown hadiah */}
+        <div className="mb-4">
+          <label htmlFor="hadiah" className="block mb-1 text-white">
+            Pilih Hadiah
+          </label>
+          <select
+  id="hadiah"
+  value={hadiah}
+  onChange={(e) => setHadiah(e.target.value)}
+  className="bg-white text-black px-3 py-2 rounded border border-gray-300"
+>
+  <option value="">-- Pilih hadiah --</option>
+  <option value="Kipas Angin">Kipas Angin</option>
+  <option value="Dispenser">Dispenser</option>
+  <option value="TV LED">TV LED</option>
+  <option value="Rice Cooker">Rice Cooker</option>
+  <option value="Voucher Belanja">Voucher Belanja</option>
+</select>
+        </div>
+
+        {/* Roda Spin */}
         {data.length === 0 ? (
-          <p className="text-gray-500">Belum ada kupon hadir untuk diundi.</p>
+          <p className="text-gray-400">
+            Belum ada kupon hadir untuk diundi.
+          </p>
         ) : (
           <>
             <Wheel
               mustStartSpinning={mustSpin}
-              prizeNumber={prizeNumber}
+              prizeNumber={prizeNumber ?? 0}
               data={data}
               backgroundColors={['#FFDDCC', '#CCEEFF']}
               textColors={['#333']}
@@ -97,42 +124,38 @@ export default function SpinWheel() {
               Putar Roda
             </button>
 
-            {/* Menampilkan form untuk memilih hadiah */}
-            {mustSpin === false && data.length > 0 && winner && (
+            {/* Pemenang muncul hanya jika sudah spin dan belum disimpan */}
+            {winner && (
               <div className="mt-8 max-w-sm mx-auto">
-                <div className="bg-transparent p-6 rounded-lg shadow-lg backdrop-blur-md bg-opacity-30">
-                  <h3 className="text-xl font-semibold text-center text-blue-600 mb-4">Pemenang Undian</h3>
-                  <ul className="space-y-2 text-left text-white">
-                    <li><strong>ID Kupon:</strong> {winner.id_kupon}</li>
-                    <li><strong>Nama:</strong> {winner.nama}</li>
-                    <li><strong>Jabatan:</strong> {winner.jabatan}</li>
-                    <li><strong>Unit Kerja:</strong> {winner.unit_kerja}</li>
+                <div className="bg-white text-black p-6 rounded-lg shadow-lg">
+                  <h3 className="text-xl font-semibold text-center text-blue-600 mb-4">
+                    Pemenang Undian
+                  </h3>
+                  <ul className="space-y-2 text-left">
+                    <li>
+                      <strong>ID Kupon:</strong> {winner.id_kupon}
+                    </li>
+                    <li>
+                      <strong>Nama:</strong> {winner.nama}
+                    </li>
+                    <li>
+                      <strong>Jabatan:</strong> {winner.jabatan}
+                    </li>
+                    <li>
+                      <strong>Unit Kerja:</strong> {winner.unit_kerja}
+                    </li>
+                    <li>
+                      <strong>Hadiah:</strong> {hadiah}
+                    </li>
                   </ul>
-
-                  {/* Form untuk memilih hadiah */}
-                  <div className="mt-4">
-                    <label htmlFor="hadiah" className="block text-white mb-2">Pilih Hadiah:</label>
-                    <input
-                      type="text"
-                      id="hadiah"
-                      value={hadiah}
-                      onChange={(e) => setHadiah(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      placeholder="Masukkan nama hadiah"
-                    />
-                  </div>
+                  <button
+                    onClick={handleWinnerSave}
+                    className="mt-4 w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  >
+                    Simpan Pemenang
+                  </button>
                 </div>
               </div>
-            )}
-
-            {/* Tombol simpan */}
-            {winner && (
-              <button
-                onClick={handleWinnerSave}
-                className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-              >
-                Simpan Pemenang
-              </button>
             )}
           </>
         )}
