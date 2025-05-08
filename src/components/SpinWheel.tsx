@@ -46,14 +46,13 @@ export default function SpinWheel() {
       alert("Harap pilih hadiah terlebih dahulu!");
       return;
     }
-
     const random = Math.floor(Math.random() * data.length);
     setPrizeNumber(random);
     setMustSpin(true);
     setIsSaved(false);
   };
 
-  const handleWinnerSave = async () => {
+  const handleWinnerSave = async (customHadiah?: string) => {
     if (prizeNumber === null) return;
 
     const winner = data[prizeNumber];
@@ -67,7 +66,7 @@ export default function SpinWheel() {
         id_kupon: winner.id_kupon,
         nama: winner.nama,
         jabatan: winner.jabatan,
-        hadiah: hadiah,
+        hadiah: customHadiah || hadiah,
       }),
     });
 
@@ -78,12 +77,11 @@ export default function SpinWheel() {
     setPrizeNumber(null);
   };
 
-  const winner =
-    prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
+  const winner = prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
 
   return (
-    <div className="flex items-start justify-center  bg-black text-white px-4 py-30">
-    <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
+    <div className="flex items-start justify-center bg-black text-white px-4 py-30">
+      <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
         {/* Kolom 1: Roda Spin */}
         <div className="flex-1 flex justify-center items-center">
           {data.length === 0 ? (
@@ -96,7 +94,7 @@ export default function SpinWheel() {
                 data={data}
                 backgroundColors={["#001F3F", "#7FDBFF"]}
                 textColors={["#ffffff"]}
-                fontSize={15} // Ukuran teks kecil agar muat banyak
+                fontSize={15}
                 outerBorderColor="#ccc"
                 outerBorderWidth={4}
                 radiusLineColor="#eaeaea"
@@ -180,12 +178,21 @@ export default function SpinWheel() {
                   <strong>Hadiah:</strong> {hadiah}
                 </li>
               </ul>
-              <button
-                onClick={handleWinnerSave}
-                className="mt-4 w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-              >
-                Simpan Pemenang
-              </button>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => handleWinnerSave()}
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                >
+                  Simpan Pemenang
+                </button>
+                <button
+                  onClick={() => handleWinnerSave("Hangus")}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                >
+                  Hanguskan Kupon
+                </button>
+              </div>
             </div>
           )}
         </div>
