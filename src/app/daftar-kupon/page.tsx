@@ -88,6 +88,7 @@ export default function DaftarKupon() {
             <option value="" disabled>Pilih Jabatan</option>
             <option value="Karyawan">Karyawan</option>
             <option value="Keluarga">Keluarga</option>
+            <option value="Magang">Magang / PKL</option>
           </select>
         </div>
         <div>
@@ -101,11 +102,15 @@ export default function DaftarKupon() {
             style={inputStyle}
           >
             <option value="" disabled>Pilih Unit Kerja</option>
-            <option value="PT KOPEL">PT Kopel</option>
-            <option value="PT Korp">PT Korp</option>
-            <option value="Kanwil Lampung">Kanwil Lampung</option>
-            <option value="UB Jastasma">UB Jastasma</option>
-            <option value="JPL Lampung">JPL Lampung</option>
+            <option value="KANWIL LAMPUNG">KANWIL LAMPUNG</option>
+            <option value="UB JASTASMA">UB JASTASMA</option>
+            <option value="JPL LAMPUNG">JPL LAMPUNG</option>
+            <option value="PT. KOPEL BERKAH MANDIRI">PT. KOPEL BERKAH MANDIRI</option>
+            <option value="PT. KOPELINDO">PT. KOPELINDO</option>
+            <option value="PT. KURNIA ORYZA REKSA PERKSA">PT. KURNIA ORYZA REKSA PERKSA</option>
+            <option value="MAGENTA">MAGENTA</option>
+            <option value="MAGANG MANDIRI">MAGANG MANDIRI</option>
+            <option value="PKL">PKL</option>
           </select>
         </div>
         <div>

@@ -1,20 +1,20 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '../../../lib/prisma'
+import { NextResponse } from 'next/server';
+import { prisma } from '../../../lib/prisma'; // sesuaikan path prisma kamu
 
 export async function GET() {
   try {
     const kuponData = await prisma.kupon.findMany({
-      where: {
-        kehadiran: true, // hanya yang hadir
-      },
       include: {
-        hadiah: true, // include hadiah (bisa null)
+        hadiah: true,
       },
-    })
+    });
 
-    return NextResponse.json(kuponData)
+    return NextResponse.json(kuponData);
   } catch (error) {
-    console.error('Error fetching kupon data:', error)
-    return NextResponse.json({ error: 'Terjadi kesalahan mengambil kupon' }, { status: 500 })
+    console.error('Error fetching kupon data:', error);
+    return NextResponse.json(
+      { error: 'Terjadi kesalahan mengambil kupon' },
+      { status: 500 }
+    );
   }
 }
