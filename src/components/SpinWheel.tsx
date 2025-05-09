@@ -77,7 +77,8 @@ export default function SpinWheel() {
     setPrizeNumber(null);
   };
 
-  const winner = prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
+  const winner =
+    prizeNumber !== null && !mustSpin && !isSaved ? data[prizeNumber] : null;
 
   return (
     <div className="flex items-start justify-center  text-white px-4 py-30">
@@ -126,19 +127,54 @@ export default function SpinWheel() {
               }}
             >
               <option value="">-- Pilih hadiah --</option>
+              <option value="">-- Pilih hadiah --</option>
+              <option value="Sepeda Listrik Eksotic">
+                Sepeda Listrik Eksotic
+              </option>
+              <option value="Xiaomi Tab 7">Xiaomi Tab 7</option>
               <option value="Sepeda Listrik">Sepeda Listrik</option>
               <option value="Android TV 43">Android TV 43</option>
-              <option value="Kulkas 1 pintu">Kulkas 1 pintu</option>
+              <option value="Kulkas 2 Pintu (Sharp)">
+                Kulkas 2 Pintu (Sharp)
+              </option>
+              <option value="Kulkas 2 Pintu (Polytron)">
+                Kulkas 2 Pintu (Polytron)
+              </option>
+              <option value="Mesin Cuci Midea">Mesin Cuci Midea</option>
               <option value="Mesin Cuci">Mesin Cuci</option>
-              <option value="Sepeda">Sepeda</option>
-              <option value="Handphone">Handphone</option>
-              <option value="Blender">Blender</option>
-              <option value="Magic Com">Magic Com</option>
-              <option value="Kipas Angin">Kipas Angin</option>
-              <option value="Setrika">Setrika</option>
+              <option value="Xiaomi TV A Pro">Xiaomi TV A Pro</option>
+              <option value="Xiaomi redmi 13">Xiaomi redmi 13</option>
+              <option value="Sepeda New Phoenix by Pacific">
+                Sepeda New Phoenix by Pacific
+              </option>
+              <option value="Handphone Android">Handphone Android</option>
+              <option value="Vacum Cleaner Sharp">Vacum Cleaner Sharp</option>
+              <option value="Speaker Aktif GMC">Speaker Aktif GMC</option>
+              <option value="Coffee Maker">Coffee Maker</option>
+              <option value="Rice Cooker Philip">Rice Cooker Philip</option>
+              <option value="Rice Cooker Samono">Rice Cooker Samono</option>
+              <option value="Ricecooker Miyako">Ricecooker Miyako</option>
+              <option value="Blender Cosmos">Blender Cosmos</option>
+              <option value="Mini Blender Kels">Mini Blender Kels</option>
+              <option value="Kipas angin Miyako">Kipas angin Miyako</option>
+              <option value="Kompor Gas">Kompor Gas</option>
+              <option value="Kompor Gas 2 Tungku">Kompor Gas 2 Tungku</option>
+              <option value="Kompor Gas Win">Kompor Gas Win</option>
+              <option value="Magic com">Magic com</option>
+              <option value="Pemanggang roti">Pemanggang roti</option>
+              <option value="Juicer">Juicer</option>
+              <option value="Setrika Kels">Setrika Kels</option>
+              <option value="Setrika Maspion">Setrika Maspion</option>
+              <option value="Setrika Miyako">Setrika Miyako</option>
+              <option value="Dispenser Miyako">Dispenser Miyako</option>
               <option value="Dispenser">Dispenser</option>
-              <option value="Pemanggang Roti">Pemanggang Roti</option>
+              <option value="Minyak Goreng">Minyak Goreng</option>
+              <option value="Oilpot Stanles">Oilpot Stanles</option>
+              <option value="Panci Calypso">Panci Calypso</option>
+              <option value="Timbangan Hinomaru">Timbangan Hinomaru</option>
+              <option value="Terminal 6">Terminal 6</option>
               <option value="Tumbler">Tumbler</option>
+              <option value="Tumbler">DLL</option>
             </select>
           </div>
 
