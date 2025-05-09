@@ -80,6 +80,12 @@ export default function Home() {
     reader.readAsArrayBuffer(file);
   };
 
+  const namaSudahDapatHadiah = new Set(
+    kuponData
+      .filter((k) => k.hadiah !== null)
+      .map((k) => k.nama?.toLowerCase().trim())
+  );
+
   const filteredKuponData = kuponData
     .filter((kupon) => {
       if (filterStatus === "with") return kupon.hadiah !== null;
@@ -88,7 +94,12 @@ export default function Home() {
       if (filterStatus === "hadir") return kupon.kehadiran === true;
       if (filterStatus === "tidak") return kupon.kehadiran === false;
       if (filterStatus === "withoutHadiahAndHadir")
-        return kupon.hadiah === null && kupon.kehadiran === true;
+        return (
+          kupon.hadiah === null &&
+          kupon.kehadiran === true &&
+          kupon.jabatan?.toLowerCase().includes("karyawan") &&
+          !namaSudahDapatHadiah.has(kupon.nama?.toLowerCase().trim())
+        );
       return true;
     })
     .filter((kupon) => {
