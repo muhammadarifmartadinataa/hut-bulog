@@ -127,7 +127,6 @@ export default function SpinWheel() {
               }}
             >
               <option value="">-- Pilih hadiah --</option>
-              <option value="">-- Pilih hadiah --</option>
               <option value="Sepeda Listrik Eksotic">
                 Sepeda Listrik Eksotic
               </option>
