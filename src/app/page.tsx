@@ -11,6 +11,7 @@ export default function Home() {
     "all" | "with" | "without" | "hangus" | "hadir" | "tidak" | "withoutHadiahAndHadir"
   >("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 10;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -55,8 +56,6 @@ export default function Home() {
         kehadiran: false,
       }));
 
-      console.log("Data yang dikirim ke server:", preparedData);
-
       try {
         const res = await fetch("/api/import-excel", {
           method: "POST",
@@ -66,12 +65,8 @@ export default function Home() {
           body: JSON.stringify(preparedData),
         });
 
-        const responseData = await res.json();
-        console.log("Respon dari server:", responseData);
-
         if (!res.ok) throw new Error("Gagal mengimpor data");
 
-        // Refresh data
         const response = await fetch("/api/kupon");
         const data = await response.json();
         setKuponData(data);
@@ -85,16 +80,26 @@ export default function Home() {
     reader.readAsArrayBuffer(file);
   };
 
-  const filteredKuponData = kuponData.filter((kupon) => {
-    if (filterStatus === "with") return kupon.hadiah !== null;
-    if (filterStatus === "without") return kupon.hadiah === null;
-    if (filterStatus === "hangus") return kupon.hadiah?.hadiah === "Hangus";
-    if (filterStatus === "hadir") return kupon.kehadiran === true;
-    if (filterStatus === "tidak") return kupon.kehadiran === false;
-    if (filterStatus === "withoutHadiahAndHadir")
-      return kupon.hadiah === null && kupon.kehadiran === true;
-    return true;
-  });
+  const filteredKuponData = kuponData
+    .filter((kupon) => {
+      if (filterStatus === "with") return kupon.hadiah !== null;
+      if (filterStatus === "without") return kupon.hadiah === null;
+      if (filterStatus === "hangus") return kupon.hadiah?.hadiah === "Hangus";
+      if (filterStatus === "hadir") return kupon.kehadiran === true;
+      if (filterStatus === "tidak") return kupon.kehadiran === false;
+      if (filterStatus === "withoutHadiahAndHadir")
+        return kupon.hadiah === null && kupon.kehadiran === true;
+      return true;
+    })
+    .filter((kupon) => {
+      const search = searchQuery.toLowerCase();
+      return (
+        kupon.nama?.toLowerCase().includes(search) ||
+        kupon.jabatan?.toLowerCase().includes(search) ||
+        kupon.id_kupon?.toLowerCase().includes(search) ||
+        kupon.unit_kerja?.toLowerCase().includes(search)
+      );
+    });
 
   const totalPages = Math.ceil(filteredKuponData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -106,7 +111,6 @@ export default function Home() {
         <h1 className="text-xl font-bold mb-4 sm:mb-0 text-center sm:text-left">
           Daftar Kupon yang Terdaftar
         </h1>
-
         <div>
           <button
             type="button"
@@ -127,6 +131,19 @@ export default function Home() {
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
+
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Cari Nama / Jabatan / ID Kupon / Unit Kerja..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="w-full sm:w-80 px-4 py-2 border rounded"
+        />
+      </div>
 
       <div className="mb-4 space-x-2">
         {[
