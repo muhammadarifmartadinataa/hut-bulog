@@ -173,7 +173,7 @@ export default function SpinWheel() {
               <option value="Timbangan Hinomaru">Timbangan Hinomaru</option>
               <option value="Terminal 6">Terminal 6</option>
               <option value="Tumbler">Tumbler</option>
-              <option value="Tumbler">DLL</option>
+              <option value="DLL">DLL</option>
             </select>
           </div>
 

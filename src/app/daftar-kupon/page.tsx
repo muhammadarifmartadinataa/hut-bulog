@@ -111,6 +111,7 @@ export default function DaftarKupon() {
             <option value="MAGENTA">MAGENTA</option>
             <option value="MAGANG MANDIRI">MAGANG MANDIRI</option>
             <option value="PKL">PKL</option>
+            <option value="PKL">LO</option>
           </select>
         </div>
         <div>
